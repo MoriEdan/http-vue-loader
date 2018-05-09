@@ -365,33 +365,30 @@
 
 	httpVueLoader.load = function(url, name) {
 
-		return function() {
+		return new Component(name).load(url)
+		.then(function(component) {
 
-			return new Component(name).load(url)
-			.then(function(component) {
+			return component.normalize();
+		})
+		.then(function(component) {
 
-				return component.normalize();
-			})
-			.then(function(component) {
+			return component.compile();
+		})
+		.then(function(component) {
 
-				return component.compile();
-			})
-			.then(function(component) {
+			var exports = component.script !== null ? component.script.module.exports : {};
 
-				var exports = component.script !== null ? component.script.module.exports : {};
+			if ( component.template !== null )
+				exports.template = component.template.getContent();
 
-				if ( component.template !== null )
-					exports.template = component.template.getContent();
+			if ( exports.name === undefined )
+				if ( component.name !== undefined )
+					exports.name = component.name;
 
-				if ( exports.name === undefined )
-					if ( component.name !== undefined )
-						exports.name = component.name;
+			exports._baseURI = component.baseURI;
 
-				exports._baseURI = component.baseURI;
-
-				return exports;
-			});
-		};
+			return exports;
+		});
 	};
 
 
