@@ -293,6 +293,9 @@
 
 					var lang = eltCx.elt.getAttribute('lang');
 					eltCx.elt.removeAttribute('lang');
+					if (!httpVueLoader.langProcessor[lang.toLowerCase()]) {
+						throw new Error("Unknown processor '" + lang + "'");
+					}
 					return httpVueLoader.langProcessor[lang.toLowerCase()](content === null ? eltCx.getContent() : content);
 				}
 				return content;
