@@ -160,14 +160,7 @@
 			try {
 				Function('exports', 'require', 'httpVueLoader', 'module', this.getContent()).call(this.module.exports, this.module.exports, childModuleRequire, childLoader, this.module);
 			} catch(ex) {
-
-				if ( !('lineNumber' in ex) ) {
-
-					return Promise.reject(ex);
-				}
-				var vueFileData = responseText.replace(/\r?\n/g, '\n');
-				var lineNumber = vueFileData.substr(0, vueFileData.indexOf(script)).split('\n').length + ex.lineNumber - 1;
-				throw new (ex.constructor)(ex.message, url, lineNumber);
+				return Promise.reject(ex);
 			}
 
 			return Promise.resolve(this.module.exports);
