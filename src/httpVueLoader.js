@@ -433,7 +433,8 @@
 	httpVueLoader.langProcessor = {
 		html: identity,
 		js: identity,
-		css: identity
+		css: identity,
+		vue: identity
 	};
 
 	function httpVueLoader(url, name) {
