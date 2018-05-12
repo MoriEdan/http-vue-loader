@@ -262,7 +262,7 @@
 			}.bind(this));
 		},
 
-		_normalizeSection: function(eltCx) {
+		_normalizeSection: function(eltCx, defaultLang) {
 
 			var p;
 
@@ -282,9 +282,9 @@
 			return p
 			.then(function(content) {
 
-				if ( eltCx !== null && eltCx.elt.hasAttribute('lang') ) {
+				if ( eltCx !== null ) {
 
-					var lang = eltCx.elt.getAttribute('lang');
+					var lang = eltCx.elt.getAttribute('lang') || defaultLang;
 					eltCx.elt.removeAttribute('lang');
 					if (!httpVueLoader.langProcessor[lang.toLowerCase()]) {
 						throw new Error("Unknown processor '" + lang + "'");
@@ -303,9 +303,9 @@
 		normalize: function() {
 
 			return Promise.all(Array.prototype.concat(
-				this._normalizeSection(this.template),
-				this._normalizeSection(this.script),
-				this.styles.map(this._normalizeSection)
+				this._normalizeSection(this.template, "vue"),
+				this._normalizeSection(this.script, "js"),
+				this.styles.map(style => this._normalizeSection(style, "css"))
 			))
 			.then(function() {
 
