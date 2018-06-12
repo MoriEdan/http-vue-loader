@@ -108,8 +108,6 @@
 
 			if ( scoped )
 				this.scopeStyles(this.elt, '['+this.component.getScopeId()+']');
-
-			return Promise.resolve();
 		},
 
 		getContent: function() {
@@ -157,13 +155,9 @@
 				return httpVueLoader(resolveURL(this.component.baseURI, childURL), childName);
 			}.bind(this);
 
-			try {
-				Function('exports', 'require', 'httpVueLoader', 'module', this.getContent()).call(this.module.exports, this.module.exports, childModuleRequire, childLoader, this.module);
-			} catch(ex) {
-				return Promise.reject(ex);
-			}
+			Function('exports', 'require', 'httpVueLoader', 'module', this.getContent()).call(this.module.exports, this.module.exports, childModuleRequire, childLoader, this.module);
 
-			return Promise.resolve(this.module.exports);
+			return this.module.exports;
 		}
 	};
 
@@ -202,8 +196,6 @@
 		},
 
 		compile: function() {
-
-			return Promise.resolve();
 		}
 	};
 
@@ -314,16 +306,13 @@
 		},
 
 		compile: function() {
-
-			return Promise.all(Array.prototype.concat(
-				this.template && this.template.compile(),
-				this.script && this.script.compile(),
-				this.styles.map(function(style) { return style.compile(); })
-			))
-			.then(function() {
-
-				return this;
-			}.bind(this));
+			if(this.template) {
+				this.template.compile();
+			}
+			if(this.script) {
+				this.script.compile();
+			}
+			this.styles.forEach(function(style) { return style.compile(); })
 		}
 	};
 
@@ -367,10 +356,7 @@
 			return component.normalize();
 		})
 		.then(function(component) {
-
-			return component.compile();
-		})
-		.then(function(component) {
+			component.compile();
 
 			var exports = component.script !== null ? component.script.module.exports : {};
 
