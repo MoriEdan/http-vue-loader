@@ -289,10 +289,10 @@
 					if (!httpVueLoader.langProcessor[lang.toLowerCase()]) {
 						throw new Error("Unknown processor '" + lang + "'");
 					}
-					return httpVueLoader.langProcessor[lang.toLowerCase()](content === null ? eltCx.getContent() : content);
+					return httpVueLoader.langProcessor[lang.toLowerCase()].call(this, content === null ? eltCx.getContent() : content);
 				}
 				return content;
-			})
+			}.bind(this))
 			.then(function(content) {
 
 				if ( content !== null )
