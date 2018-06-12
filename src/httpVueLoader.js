@@ -442,6 +442,11 @@
 		var comp = parseComponentURL(url);
 		return httpVueLoader.load(comp.url, name);
 	}
+	
+	httpVueLoader.Component = Component;
+	httpVueLoader.TemplateContext = TemplateContext;
+	httpVueLoader.ScriptContext = ScriptContext;
+	httpVueLoader.StyleContext = StyleContext;
 
 	return httpVueLoader;
 });
