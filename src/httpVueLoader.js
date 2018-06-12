@@ -149,7 +149,7 @@
 
 			var childModuleRequire = function(childURL) {
 
-				return httpVueLoader.require(resolveURL(this.component.baseURI, childURL));
+				return httpVueLoader.require.call(this, resolveURL(this.component.baseURI, childURL));
 			}.bind(this);
 
 			var childLoader = function(childURL, childName) {
